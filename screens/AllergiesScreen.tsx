@@ -9,8 +9,17 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import BottomButton from "../component/BottomButtons";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../App";
 
-const items = [
+interface Item {
+  id: number;
+  name: string;
+}
+
+type Props = NativeStackScreenProps<RootStackParamList, "Allergies">;
+
+const items: Item[] = [
   { id: 1, name: "Milk" },
   { id: 2, name: "Meat" },
   { id: 3, name: "Weat" },
@@ -19,21 +28,22 @@ const items = [
   { id: 6, name: "Nasaonex" },
 ];
 
-export default function SuggestionInput({ navigation, route }) {
+const AllergiesScreen: React.FC<Props> = ({ navigation, route }) => {
   const { healthData, dietData } = route.params;
-  const [loaded, error] = useFonts({
+
+  const [loaded] = useFonts({
     VarelaRound: require("../assets/fonts/VarelaRound-Regular.ttf"),
   });
 
   if (!loaded) {
-    return null;
+    return null; 
   }
 
-  const [text, setText] = useState("");
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [suggestions, setSuggestions] = useState([]);
+  const [text, setText] = useState<string>("");
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<Item[]>([]);
 
-  const filterSuggestions = (inputText) => {
+  const filterSuggestions = (inputText: string) => {
     if (inputText) {
       const filteredSuggestions = items.filter((item) =>
         item.name.toLowerCase().includes(inputText.toLowerCase())
@@ -44,7 +54,7 @@ export default function SuggestionInput({ navigation, route }) {
     }
   };
 
-  const handleItemPress = (item) => {
+  const handleItemPress = (item: Item) => {
     if (!selectedItems.includes(item.name)) {
       setSelectedItems((prevSelected) => [...prevSelected, item.name]);
     }
@@ -52,7 +62,7 @@ export default function SuggestionInput({ navigation, route }) {
     setSuggestions([]);
   };
 
-  const removeItem = (item) => {
+  const removeItem = (item: string) => {
     setSelectedItems((prevSelected) =>
       prevSelected.filter((selectedItem) => selectedItem !== item)
     );
@@ -63,7 +73,6 @@ export default function SuggestionInput({ navigation, route }) {
       <Text
         style={[
           { fontFamily: "VarelaRound", fontSize: 20, paddingBottom: 10 },
-          styles.leftAlignedText,
         ]}
       >
         Write any specific allergies or sensitivity towards specific things.
@@ -120,7 +129,7 @@ export default function SuggestionInput({ navigation, route }) {
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -173,3 +182,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+export default AllergiesScreen;

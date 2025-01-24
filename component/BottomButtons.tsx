@@ -2,10 +2,27 @@ import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
 
-const BottomButton = ({ onBackPress, onNextPress }) => {
-  const [loaded, error] = useFonts({
+interface BottomButtonProps {
+  onBackPress: () => void;
+  onNextPress: () => void;
+  backText: string;
+  nextText: string;
+}
+
+const BottomButton: React.FC<BottomButtonProps> = ({
+  onBackPress,
+  onNextPress,
+  backText,
+  nextText
+}) => {
+  const [loaded] = useFonts({
     VarelaRound: require("../assets/fonts/VarelaRound-Regular.ttf"),
   });
+
+  if (!loaded) {
+    return null;
+  }
+
   return (
     <View style={styles.buttonContainer}>
       {/* Go Back Button */}
@@ -16,30 +33,28 @@ const BottomButton = ({ onBackPress, onNextPress }) => {
             { color: "#FF7047", fontFamily: "VarelaRound" },
           ]}
         >
-          Back
+          {backText}
         </Text>
       </TouchableOpacity>
 
-      {/* Navigate to Health Button */}
       <TouchableOpacity
         style={[styles.button, { backgroundColor: "#FF7047" }]}
         onPress={onNextPress}
       >
         <Text style={[styles.buttonText, { fontFamily: "VarelaRound" }]}>
-          Next
+          {nextText}
         </Text>
       </TouchableOpacity>
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   buttonContainer: {
-    position: "absolute", // Position the buttons at the bottom
-    bottom: 80, // Set distance from the bottom of the screen
+    position: "absolute", 
+    bottom: 80, 
     width: "100%",
     flexDirection: "row",
-    justifyContent: "space-between", // Space buttons on opposite sides
+    justifyContent: "space-between", 
     paddingHorizontal: 20,
   },
   button: {

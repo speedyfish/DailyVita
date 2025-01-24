@@ -1,19 +1,27 @@
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
+import { RootStackParamList } from "../App";
 
-const VitaminScreen = ({ route }) => {
+type Props = NativeStackScreenProps<RootStackParamList, "Vitamin">;
+
+const VitaminScreen: React.FC<Props> = ({ route }) => {
   const { healthData, dietData, allergiesData } = route.params;
-  const selectedOption = useSelector((state) => state.selectedOption.answers);
+
+  const selectedOption = useSelector(
+    (state: { selectedOption: { answers: string[] } }) =>
+      state.selectedOption.answers
+  );
+
   return (
     <View style={styles.container}>
       <Text style={styles.congratulationsText}>Congratulations!</Text>
       <Text style={styles.messageText}>You are healthy!</Text>
-      <Text style={styles.text}>{JSON.stringify(healthData, null, 2)}</Text>
-      <Text style={styles.text}>{JSON.stringify(dietData, null, 2)}</Text>
-      <Text style={styles.text}>{JSON.stringify(allergiesData, null, 2)}</Text>
-      <Text style={styles.text}>{JSON.stringify(selectedOption, null, 2)}</Text>
-      {console.error(route.params)}
+      <Text >{JSON.stringify(healthData, null, 2)}</Text>
+      <Text >{JSON.stringify(dietData, null, 2)}</Text>
+      <Text >{JSON.stringify(allergiesData, null, 2)}</Text>
+      <Text >{JSON.stringify(selectedOption, null, 2)}</Text>
     </View>
   );
 };
@@ -28,12 +36,12 @@ const styles = StyleSheet.create({
   congratulationsText: {
     fontSize: 36,
     fontWeight: "bold",
-    color: "#0D63B6", // Blue color
+    color: "#0D63B6", 
     marginBottom: 10,
   },
   messageText: {
     fontSize: 24,
-    color: "#4CAF50", // Green color for health
+    color: "#4CAF50",
   },
 });
 

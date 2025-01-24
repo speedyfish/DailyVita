@@ -9,16 +9,24 @@ import {
 import { CheckBox } from "react-native-elements";
 import { useFonts } from "expo-font";
 import BottomButton from "../component/BottomButtons";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../App";
 
-export default function DietScreen({ navigation, route }) {
+type Props = NativeStackScreenProps<RootStackParamList, "Diet">;
+
+const DietScreen: React.FC<Props> = ({ navigation, route }) => {
   const { healthData } = route.params;
-  const [selectedDiets, setSelectedDiets] = useState([]);
+  const [selectedDiets, setSelectedDiets] = useState<string[]>([]);
 
-  const [loaded, error] = useFonts({
+  const [loaded] = useFonts({
     VarelaRound: require("../assets/fonts/VarelaRound-Regular.ttf"),
   });
 
-  const dietOptions = [
+  if (!loaded) {
+    return null; 
+  }
+
+  const dietOptions: string[] = [
     "None",
     "Vegan",
     "Vegetarian",
@@ -28,7 +36,7 @@ export default function DietScreen({ navigation, route }) {
     "Plant based",
   ];
 
-  const handleCheckboxChange = (diet) => {
+  const handleCheckboxChange = (diet: string) => {
     setSelectedDiets((prev) =>
       prev.includes(diet)
         ? prev.filter((item) => item !== diet)
@@ -58,6 +66,7 @@ export default function DietScreen({ navigation, route }) {
           />
         ))}
       </View>
+
       <BottomButton
         onBackPress={() => navigation.goBack()}
         onNextPress={() =>
@@ -71,7 +80,7 @@ export default function DietScreen({ navigation, route }) {
       />
     </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -94,3 +103,5 @@ const styles = StyleSheet.create({
     fontFamily: "VarelaRound",
   },
 });
+
+export default DietScreen;

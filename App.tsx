@@ -2,18 +2,35 @@ import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "./screens/HomeScreen"; // Create a HomeScreen component
-import HealthScreen from "./screens/HealthScreen";
+import HomeScreen from "./screens/HomeScreen";
+import HealthScreen, { DraggableItem } from "./screens/HealthScreen";
 import DietScreen from "./screens/DietScreen";
-import QuestionsScreen from "./screens/QuestionsScreen";
-import AllergiesScreen from "./screens/AllergiesScreen";
+import QuestionsScreen from "./screens/QuestionsScreen.tsx";
 import VitaminScreen from "./screens/VitaminScreen";
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import AllergiesScreen from "./screens/AllergiesScreen.tsx";
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  Home: undefined;
+  Health: undefined;
+  Diet: { healthData: DraggableItem[] };
 
-export default function App() {
+  Questions: {
+    healthData: DraggableItem[];
+    dietData: string[];
+    allergiesData: string[];
+  };
+  Allergies: { healthData: DraggableItem[]; dietData: string[] };
+  Vitamin: { healthData: DraggableItem[];
+    dietData: string[];
+    allergiesData: string[]; };
+  AllergiesScreen: { healthData: DraggableItem[]; dietData: string[] };
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+const App: React.FC = () => {
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{ flex: 1 }}>
@@ -54,4 +71,6 @@ export default function App() {
       </GestureHandlerRootView>
     </Provider>
   );
-}
+};
+
+export default App;

@@ -1,26 +1,33 @@
-// src/components/QuestionWithRadio.js
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { setSelectedOption } from "../redux/selectedOptionsSlice";
 import { useFonts } from "expo-font";
 
-const QuestionWithRadio = ({ question, options }) => {
+interface QuestionWithRadioProps {
+  question: string; 
+  options: string[];
+}
+
+const QuestionWithRadio: React.FC<QuestionWithRadioProps> = ({
+  question,
+  options,
+}) => {
   const [loaded, error] = useFonts({
     VarelaRound: require("../assets/fonts/VarelaRound-Regular.ttf"),
   });
 
   if (!loaded) {
-    return null; // Or you can show a loading indicator
+    return null; 
   }
+
   const dispatch = useDispatch();
   const selectedOption = useSelector(
-    (state) => state.selectedOption.answers[question]
+    (state: any) => state.selectedOption.answers[question] 
   );
 
-  const handleOptionSelect = (option) => {
-    console.error("option", option);
-    dispatch(setSelectedOption({ question, answer: option })); // Dispatch action with question and selected option
+  const handleOptionSelect = (option: string) => {
+    dispatch(setSelectedOption({ question, answer: option })); 
   };
 
   return (

@@ -8,14 +8,18 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useFonts } from "expo-font";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../App";
 
-export default function HomeScreen({ navigation }) {
-  const [loaded, error] = useFonts({
+type Props = NativeStackScreenProps<RootStackParamList, "Home">;
+
+const HomeScreen: React.FC<Props> = ({ navigation }) => {
+  const [loaded] = useFonts({
     VarelaRound: require("../assets/fonts/VarelaRound-Regular.ttf"),
   });
 
   if (!loaded) {
-    return null;
+    return null; 
   }
 
   return (
@@ -35,14 +39,10 @@ export default function HomeScreen({ navigation }) {
       <Text style={{ fontFamily: "VarelaRound", fontSize: 16 }}>
         We will help you with your vitamin needs
       </Text>
-
       <TouchableOpacity
         style={styles.button}
         onPress={() =>
-          navigation.navigate("Health", {
-            itemId: 42,
-            name: "React Navigation",
-          })
+          navigation.navigate("Health")
         }
       >
         <Text style={[{ fontFamily: "VarelaRound" }, styles.buttonText]}>
@@ -51,7 +51,9 @@ export default function HomeScreen({ navigation }) {
       </TouchableOpacity>
     </View>
   );
-}
+};
+
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {

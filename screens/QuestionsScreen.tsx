@@ -1,23 +1,37 @@
-// src/screens/MyFormScreen.js
 import React, { useState } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import QuestionWithRadio from "../component/QuestionWithRadio";
 import { useSelector } from "react-redux";
 import { Text } from "react-native";
 import { useFonts } from "expo-font";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../App";
 
-const MyFormScreen = ({ navigation, route }) => {
+type Props = NativeStackScreenProps<RootStackParamList, "Questions">;
+
+interface Question {
+  question: string;
+  options: string[];
+}
+
+const MyFormScreen: React.FC<Props> = ({ navigation, route }) => {
   const { healthData, dietData, allergiesData } = route.params;
-  const [loaded, error] = useFonts({
+
+  // Load fonts
+  const [loaded] = useFonts({
     VarelaRound: require("../assets/fonts/VarelaRound-Regular.ttf"),
   });
 
   if (!loaded) {
-    return null;
+    return null; 
   }
 
-  const selectedOption = useSelector((state) => state.selectedOption.answers);
-  const questions = [
+  const selectedOption = useSelector(
+    (state: { selectedOption: { answers: string[] } }) =>
+      state.selectedOption.answers
+  );
+
+  const questions: Question[] = [
     {
       question: "Is your daily exposure to the sun limited?",
       options: ["Yes", "No"],
@@ -34,6 +48,7 @@ const MyFormScreen = ({ navigation, route }) => {
   ];
 
   console.error("selectedOption", selectedOption);
+
   return (
     <View style={styles.container}>
       {questions.map((questionData, index) => (

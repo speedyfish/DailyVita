@@ -8,11 +8,16 @@ import {
   Dimensions,
 } from "react-native";
 
-const PillSelector = ({ items, onSelectionChange }) => {
-  const [selectedItems, setSelectedItems] = useState([]);
+interface PillSelectorProps {
+  items: string[]; 
+  onSelectionChange?: (selectedItems: string[]) => void; 
+}
 
-  const toggleSelection = (item) => {
-    let updatedSelection;
+const PillSelector: React.FC<PillSelectorProps> = ({ items, onSelectionChange }) => {
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+  const toggleSelection = (item: string) => {
+    let updatedSelection: string[];
     if (selectedItems.includes(item)) {
       updatedSelection = selectedItems.filter((i) => i !== item);
     } else {
@@ -20,20 +25,19 @@ const PillSelector = ({ items, onSelectionChange }) => {
     }
     setSelectedItems(updatedSelection);
 
-    // Notify the parent component of the change
     if (onSelectionChange) {
       onSelectionChange(updatedSelection);
     }
   };
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item }: { item: string }) => {
     const isSelected = selectedItems.includes(item);
 
     return (
       <TouchableOpacity
         style={[
           styles.pill,
-          isSelected && styles.selectedPill, // Apply selected style
+          isSelected && styles.selectedPill, 
         ]}
         onPress={() => toggleSelection(item)}
       >
@@ -49,7 +53,7 @@ const PillSelector = ({ items, onSelectionChange }) => {
       data={items}
       renderItem={renderItem}
       keyExtractor={(item, index) => `${item}-${index}`}
-      numColumns={Math.floor(Dimensions.get("window").width / 110)} // Adjust numColumns based on screen width
+      numColumns={Math.floor(Dimensions.get("window").width / 110)} 
       contentContainerStyle={styles.container}
     />
   );
@@ -69,14 +73,14 @@ const styles = StyleSheet.create({
     borderColor: "1D438A",
   },
   selectedPill: {
-    backgroundColor: "#1D438A", // Selected pill color
+    backgroundColor: "#1D438A", 
   },
   pillText: {
     color: "#000",
     fontSize: 14,
   },
   selectedPillText: {
-    color: "#FFF", // Selected pill text color
+    color: "#FFF", 
   },
 });
 

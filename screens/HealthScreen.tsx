@@ -9,25 +9,37 @@ import {
 } from "react-native";
 import PillSelector from "../component/PillSelector";
 import DraggableFlatList, {
+  RenderItemParams,
   ScaleDecorator,
 } from "react-native-draggable-flatlist";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useFonts } from "expo-font";
 import BottomButton from "../component/BottomButtons";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../App";
 
-export default function HealthScreen({ navigation }) {
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [data, setData] = useState([]);
+type Props = NativeStackScreenProps<RootStackParamList, "Health">;
 
-  const [loaded, error] = useFonts({
+// Define the structure of a draggable item
+export interface DraggableItem {
+  key: string;
+  label: string;
+  height: number;
+}
+
+const HealthScreen: React.FC<Props> = ({ navigation }) => {
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [data, setData] = useState<DraggableItem[]>([]);
+
+  const [loaded] = useFonts({
     VarelaRound: require("../assets/fonts/VarelaRound-Regular.ttf"),
   });
 
   if (!loaded) {
-    return null;
+    return null; 
   }
 
-  const categories = [
+  const categories: string[] = [
     "Sleep",
     "Immunity",
     "Stress",
@@ -43,14 +55,18 @@ export default function HealthScreen({ navigation }) {
 
   useEffect(() => {
     const newData = selectedItems.map((label) => ({
-      key: `${label}`,
+      key: label,
       label: label,
-      height: 60, // Adjusted height for better appearance
+      height: 60, 
     }));
     setData(newData);
   }, [selectedItems]);
 
-  const renderItem = ({ item, drag, isActive }) => {
+  const renderItem = ({
+    item,
+    drag,
+    isActive,
+  }: RenderItemParams<DraggableItem>) => {
     return (
       <ScaleDecorator>
         <TouchableOpacity
@@ -97,7 +113,10 @@ export default function HealthScreen({ navigation }) {
         Select the top health concerns. {"\n"}(upto 5)
       </Text>
       <View style={styles.pillSelectorContainer}>
-        <PillSelector items={categories} onSelectionChange={setSelectedItems} />
+        <PillSelector
+          items={categories}
+          onSelectionChange={setSelectedItems}
+        />
       </View>
       <Text
         style={[
@@ -107,7 +126,6 @@ export default function HealthScreen({ navigation }) {
       >
         Prioritize
       </Text>
-      {console.error("data", data)}
 
       <View style={styles.draggableContainer}>
         <DraggableFlatList
@@ -126,7 +144,7 @@ export default function HealthScreen({ navigation }) {
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -173,3 +191,5 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 });
+
+export default HealthScreen;
